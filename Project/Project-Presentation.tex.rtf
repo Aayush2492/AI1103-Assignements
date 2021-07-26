@@ -1,0 +1,242 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \\documentclass\{beamer\}\
+\\usepackage\{listings\}\
+\\lstset\{\
+%language=C,\
+frame=single, \
+breaklines=true,\
+columns=fullflexible\
+\}\
+\\usepackage\{blkarray\}\
+\\usepackage\{subcaption\}\
+\\usepackage\{url\}\
+\\usepackage\{tikz\}\
+\\usepackage\{tkz-euclide\} % loads  TikZ and tkz-base\
+%\\usetkzobj\{all\}\
+\\usetikzlibrary\{calc,math\}\
+\\usepackage\{float\}\
+\\newcommand\\norm[1]\{\\left\\lVert#1\\right\\rVert\}\
+\\renewcommand\{\\vec\}[1]\{\\mathbf\{#1\}\}\
+\\usepackage[export]\{adjustbox\}\
+\\usepackage[utf8]\{inputenc\}\
+\\usepackage\{amsmath\}\
+\\usepackage\{tikz\}\
+\\usepackage\{hyperref\}\
+\\usepackage\{bm\}\
+\\hypersetup\{\
+    colorlinks = true,\
+    linkbordercolor = \{white\},\
+    linkcolor=\{red\},\
+    citecolor=\{green\},\
+    filecolor=\{blue\},\
+	menucolor=\{red\},\
+	runcolor=\{cyan\},\
+	urlcolor=\{blue\},\
+	breaklinks=true\
+\}\
+\\usetikzlibrary\{automata, positioning\}\
+\\usetheme\{Boadilla\}\
+\\providecommand\{\\pr\}[1]\{\\ensuremath\{\\Pr\\left(#1\\right)\}\}\
+\\providecommand\{\\mbf\}\{\\mathbf\}\
+\\providecommand\{\\qfunc\}[1]\{\\ensuremath\{Q\\left(#1\\right)\}\}\
+\\providecommand\{\\sbrak\}[1]\{\\ensuremath\{\{\}\\left[#1\\right]\}\}\
+\\providecommand\{\\lsbrak\}[1]\{\\ensuremath\{\{\}\\left[#1\\right.\}\}\
+\\providecommand\{\\rsbrak\}[1]\{\\ensuremath\{\{\}\\left.#1\\right]\}\}\
+\\providecommand\{\\brak\}[1]\{\\ensuremath\{\\left(#1\\right)\}\}\
+\\providecommand\{\\lbrak\}[1]\{\\ensuremath\{\\left(#1\\right.\}\}\
+\\providecommand\{\\rbrak\}[1]\{\\ensuremath\{\\left.#1\\right)\}\}\
+\\providecommand\{\\cbrak\}[1]\{\\ensuremath\{\\left\\\{#1\\right\\\}\}\}\
+\\providecommand\{\\lcbrak\}[1]\{\\ensuremath\{\\left\\\{#1\\right.\}\}\
+\\providecommand\{\\rcbrak\}[1]\{\\ensuremath\{\\left.#1\\right\\\}\}\}\
+\\providecommand\{\\abs\}[1]\{\\vert#1\\vert\}\
+\
+\\title\{Detection Probability Calculations for Fluctuating Targets under Clutter by RADAR Systems.\}\
+\\author\{Aayush Patel\}\
+\\date\{CS20BTECH11001\}\
+\
+\\begin\{document\}\
+\
+\\begin\{frame\}\
+\\titlepage\
+\\end\{frame\}\
+\
+\
+\\begin\{frame\}\{Quick overview of working of a RADAR\}\
+\\begin\{figure\}[!ht]\
+\\centering\
+\\includegraphics[width=0.8\\columnwidth]\{radar_working.jpeg\}\
+\\caption\{Working of a RADAR\}\
+\\label\{working\}\
+\\end\{figure\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Some RADAR Terminologies\}\
+\\begin\{enumerate\}\
+    \\item RCS(Radar Cross Section) - Effective area of cross section of the target which reflects the radio/micro waves. It is a common measure of how detectable an object is by radar.\
+    \\item Noise - Random signals that get mixed with the reflected signals and not originated from any physical objects. In this presentation we will only take thermal noise into consideration.\
+    \\item Clutter - Unwanted reflected waves from ground, sea, rain, birds, etc.\
+    \\item Detection Threshold - Threshold level such that if signal to noise power ratio is above it, it is taken as target signal and if below that, it is taken as noise signal. This demands the need to include statistics in RADAR systems and gives rise to terms like probability of detection.\
+\\end\{enumerate\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Diagram illustrating detection threshold\}\
+\\begin\{figure\}[!ht]\
+\\centering\
+\\includegraphics[width=0.8\\columnwidth]\{threshold.png\}\
+\\caption\{Statistics of target detection\}\
+\\label\{working\}\
+\\end\{figure\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{\}\
+\\begin\{block\}\{Abstract\}\
+\\begin\{enumerate\}\
+    \\item Classical RCS models(like Swerling model) treated the target RCS value as a random variable irrespective of its aspect angle with respect to radar. This leads to inaccuracy in detection probability calculations and the RCS model used in this presentation takes aspect angle into account.\
+    \
+    \\item This paper describes a method for generating single-pulse detection probabilities by using a newly proposed aspect-dependent RCS model including the clutter component as well. \
+    \\item We will compare various Weibull clutter models to emphasize the importance of clutter parameters selection when analyzing radar performance.\
+    \\item We will compare the probability detection for different values of Weibull parameter $\\beta$ and specify the importance of choosing the right $\\beta$ for the specific terrain type.\
+    \\item Real life applications include flight path optimizations, improving radar systems for better detection,etc.\
+\\end\{enumerate\}\
+\\end\{block\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Symbols used\}\
+\\begin\{table\}[h]\
+\\centering\
+\\scalebox\{0.8\}\
+\{\
+    \\resizebox\{\\columnwidth\}\{!\}\
+    \{\
+        \\begin\{tabular\}\{|c|c|\}\
+        \\hline\
+        \\textbf\{Symbols\} & \\textbf\{Meaning\} \\\\\
+        \\hline\
+        $\\theta$ & Azimuth angle \\\\\
+        \\hline\
+        $\\psi$ & Elevation angle \\\\\
+        \\hline\
+        $P_d$ & Probability of detection \\\\\
+        \\hline\
+        $A_t$ & Target amplitude \\\\\
+        \\hline\
+        $A_c$ & Clutter amplitude \\\\\
+        \\hline\
+        $A_n$ & Noise amplitude \\\\\
+        \\hline\
+        $T_d$ & Detection Threshold \\\\\
+        \\hline\
+        $S_\{i\}$ & Mean Radar Cross Section at $\\theta_i$  \\\\\
+        \\hline\
+        \\end\{tabular\}\
+    \}\
+\}\
+    \\caption\{Symbols used in presentation\}\
+    \\label\{table 5\}\
+\\end\{table\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Some Probability Distributions Used\}\
+\\begin\{block\}\{1. Gaussian Distribution\}\
+ $$f(x;\\mu,\\sigma)= \\dfrac\{1\}\{\\sigma \\sqrt\{2\\pi\}\} exp\\brak\{\\dfrac\{-(x-\\mu)^2\}\{2\\sigma^2\}\}$$\
+ where $\\mu$ is the mean and $\\sigma^2$ is the variance.\
+\\end\{block\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Some Probability Distributions Used\}\
+\\begin\{block\}\{2. Weibull Distribution\}\
+ $$f(x;\\alpha,\\beta)= \\dfrac\{\\beta\}\{\\alpha\}\\brak\{\\dfrac\{x\}\{\\alpha\}\}^\{\\beta-1\}exp\\brak\{\\dfrac\{-x\}\{\\alpha\}\}^\\beta, x\\geq0$$\
+This distribution will be required to generate the values of clutter amplitude for a particular azimuth angle($\\theta_i$).\
+\\end\{block\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Some Probability Distributions Used\}\
+\\begin\{block\}\{3. Rayleigh Distribution\}\
+$$f(x;\\sigma)=\\dfrac\{x^2\}\{\\sigma^2\}exp\\brak\{\\dfrac\{-x\}\{2\\sigma^2\}\}, x\\geq0$$\
+This distribution will be required to generate the values of noise amplitude for a particular azimuth angle($\\theta_i$).\
+\\end\{block\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Generating RCS model of Target\}\
+We take a sample of values of Azimuth angles($\\theta_i$).\
+\\\\\
+For each sampled azimuth angle $\\theta_i$, we generate N random values of azimuth angles $\\Theta_\{i,j\}$ ($j$ = 1 to N) from the normal distribution function taking $\\theta_i$ as the mean of the Gaussian distribution and setting the standard deviation at $\\Delta \\theta = 1$ $^\{\\circ\}$ such that $\\theta_i-3^\{\\circ\} \\leq \\Theta_\{i,j\} \\leq \\theta_i+3^\{\\circ\}$.\
+\\\\\
+$$p(\\Theta_\{i,j\}|\\theta_i, \\Delta \\theta_i) = \\dfrac\{1\}\{\\sqrt\{2\\pi \\Delta \\theta_i\}\} exp\\brak\{\\dfrac\{-(\\Theta_\{i,j\}-\\theta_i)^2\}\{2\\Delta \\theta_i\}\}$$\
+We do the same for elevation angles and generate N random values of elevation angles($\\Phi_\{i,j\}$) with mean elevation angle= 0 for simplification purposes.\
+$$p(\\Phi\{i,j\}|\\phi_i, \\Delta \\phi_i) = \\dfrac\{1\}\{\\sqrt\{2\\pi \\Delta \\phi_i\}\} exp\\brak\{\\dfrac\{-(\\Phi_\{i,j\}-0)^2\}\{2\\Delta \\phi_i\}\}$$\
+\\end\{frame\}\
+\\begin\{frame\}\{Generating RCS model of Target\}\
+$N=30000$ is sufficient here.\
+Using the new RCS model in reference paper (2), we generate N power values for each $\\theta_i$,\
+$$\\sigma_t^\{i,j\}=RCS(\\Theta_\{i,j\},\\Phi_\{i,j\})$$\
+Target amplitude is, \
+$$A_t^\{i,j\} = \\sqrt\{2\\sigma_t^\{i,j\}\}$$\
+$$S_i = \\dfrac\{1\}\{N\}\\sum_\{j=1\}^N (\\sigma_t^\{i,j\})$$\
+Therefore for each azimuth angle $\\theta_i$ we will take RCS as $S_i$.\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Clutter RCS model generation\}\
+Using the Weibull density function, we generate N random values of clutter amplitude($A_c^\{i,j\}$) for each azimuth angle $\\theta_i$ and from uniform distribution, we generate N random values of phase between 0 and 2$\\pi$ ($\\psi_c^\{i,j\}$).\
+\
+\\begin\{equation\}\\label\{clutter\}\
+    p(A_c|\\alpha,\\beta)= \\dfrac\{\\beta\}\{\\alpha\}\\brak\{\\dfrac\{A_c\}\{\\alpha\}\}^\{\\beta-1\}exp\\brak\{\\dfrac\{-A_c\}\{\\alpha\}\}^\\beta\
+\\end\{equation\}\
+where, $\\alpha$ is the scale parameter and $\\beta$ is the shape parameter.\\\\\
+The parameter $\\alpha$ and $\\beta$ are varied as per the domain/surroundings.\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Noise RCS model generation\}\
+Using the Rayleigh density function, we generate N random values of noise amplitude($A_n^\{i,j\}$) and from uniform distribution, we generate N random values of phase between 0 and 2$\\pi$ ($\\psi_n^\{i,j\}$).\
+$$p(A_n)=\\dfrac\{A_n\}\{\\sigma_n^2\}exp\\brak\{\\dfrac\{-A_n^2\}\{2\\sigma_n^2\}\}$$\
+where $\\sigma_n^2$ is characteristic noise power in each channel.\
+    \
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Calculating detection probability\}\
+\
+Let $Q_\{i,j\}$ and $I_\{i,j\}$ represent the components of the input signal $A_s^\{i,j\}$ for each azimuth angle $\\theta_i$,\
+$$Q_\{i,j\}=A_t^\{i,j\}cos(\\psi_t^\{i,j\})+A_c^\{i,j\}cos(\\psi_c^\{i,j\})+A_n^\{i,j\}cos(\\psi_n^\{i,j\})$$\
+$$I_\{i,j\}=A_t^\{i,j\}sin(\\psi_t^\{i,j\})+A_c^\{i,j\}sin(\\psi_c^\{i,j\})+A_n^\{i,j\}sin(\\psi_n^\{i,j\})$$\
+$$A_s^\{i,j\}=\\sqrt\{Q_\{i,j\}^2+I_\{i,j\}^2\}$$\
+$$p_d^i = \\dfrac\{1\}\{N\}\\sum_\{j=1\}^N (A_s^\{i,j\} \\geq T_d)$$\
+Therefore for each azimuth angle($\\theta_i$) in sample we have generated the detection probability of the aircraft (including the clutter).\\\\\
+$T_d$ value calculation is predetermined.\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Conclusion-Simulations\}\
+    \\begin\{figure\}[!ht]\
+\\centering\
+\\includegraphics[width=0.7\\columnwidth]\{pdf.png\}\
+\\caption\{PDF of Weibull distribution for different values of parameter $\\beta$\}\
+\\label\{working\}\
+\\end\{figure\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Conclusion-Simulations\}\
+    \\begin\{figure\}[!ht]\
+\\centering\
+\\includegraphics[width=0.7\\columnwidth]\{pd.png\}\
+\\caption\{$p_d$ v/s $\\theta$ for different values of parameter $\\beta$\}\
+\\label\{working\}\
+\\end\{figure\}\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Observations from the above simulations\}\
+ Taking as a reference the classic Swerling I model together with the Gaussian background ($\\beta$ =2.0), the detection probability is expected to be low with $p_d$ = 0.28. However, closely examining above figure shows that the target is more likely to be detected ($p_d\\geq$0.5) when $\\theta_i=0^\{\\circ\}, 90^\{\\circ\}$ and $180^\{\\circ\}.$\
+\\end\{frame\}\
+\
+\\begin\{frame\}\{Conclusion\}\
+    \\begin\{enumerate\}\
+        \\item We presented a method to calculate the detection probability of an aerial target by combining a newly proposed approach for modeling aspect-dependent RCS fluctuation together with classic statistical clutter models.\
+        \\item By comparing the probability detection for different values of Weibull parameter $\\beta$ we specify the importance of choosing the right $\\beta$ for the specific terrain type.\
+\
+    \\end\{enumerate\}\
+\\end\{frame\}\
+\\end\{document\}}
